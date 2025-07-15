@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESE CRM Integrator - Installation & Configuration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      line-height: 1.6;
+    }
+    h1, h2, h3 {
+      color: #c62828;
+    }
+    code {
+      background-color: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    pre {
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-left: 4px solid #c62828;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    .note {
+      background: #fff8e1;
+      border-left: 5px solid #ffc107;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ESE CRM Integrator</h1>
+  <p><strong>Version:</strong> 1.1<br>
+     <strong>Author:</strong> Sr. Vivek Raj<br>
+     <strong>Website:</strong> <a href="https://webbrella.com" target="_blank">https://webbrella.com</a>
+  </p>
+
+  <h2>📥 1. Installation</h2>
+  <h3>✅ Manual Installation</h3>
+  <ol>
+    <li>Save the plugin code in a file named <code>ese-crm-integrator.php</code></li>
+    <li>Create a folder at <code>wp-content/plugins/ese-crm-integrator/</code></li>
+    <li>Upload the <code>ese-crm-integrator.php</code> file to this folder.</li>
+    <li>Go to <strong>WordPress Admin &gt; Plugins</strong> and click <strong>Activate</strong>.</li>
+  </ol>
+
+  <h2>⚙️ 2. Configuration</h2>
+  <h3>📍 Access Settings:</h3>
+  <p>Go to <strong>Settings &gt; LeadSync Settings</strong> in your WordPress admin panel.</p>
+
+  <h3>🔐 Fill Required Fields:</h3>
+  <table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td><strong>CRM Token</strong></td><td>Your secure CRM token provided by the ESE CRM backend</td></tr>
+    <tr><td><strong>Allowed Website Domain</strong></td><td>Your website domain (e.g. <code>example.com</code>)</td></tr>
+  </table>
+
+  <div class="note"><strong>Note:</strong> The plugin verifies if the current domain matches <code>$_SERVER['SERVER_NAME']</code></div>
+
+  <h2>🧩 3. Form Integrations</h2>
+  <h3>✅ A. Contact Form 7</h3>
+  <ol>
+    <li>Create or edit a form under <strong>Contact &gt; Contact Forms</strong></li>
+    <li>Add the following fields:</li>
+  </ol>
+  <pre>
+[text* your-name placeholder "Your Name"]
+[email* your-email placeholder "Your Email"]
+[tel* your-phone placeholder "Phone Number"]
+[text your-subject placeholder "Subject"]
+[textarea your-message placeholder "Message"]
+[submit "Send"]
+  </pre>
+
+  <h3>✅ B. Elementor Pro Forms</h3>
+  <ol>
+    <li>Edit your page with <strong>Elementor</strong></li>
+    <li>Add a <strong>Form Widget</strong></li>
+    <li>Ensure the following field IDs or Labels:</li>
+  </ol>
+  <table>
+    <tr><th>Field Label</th><th>Field ID</th></tr>
+    <tr><td>Name</td><td><code>name</code></td></tr>
+    <tr><td>Email</td><td><code>email</code></td></tr>
+    <tr><td>Phone</td><td><code>phone</code></td></tr>
+    <tr><td>Subject</td><td><code>subject</code></td></tr>
+    <tr><td>Message</td><td><code>message</code></td></tr>
+  </table>
+
+  <h2>🧪 4. Testing Submission</h2>
+  <ol>
+    <li>Submit the form from the frontend.</li>
+    <li>Check the CRM dashboard for the entry.</li>
+    <li>Optional: use browser dev tools to inspect the API call.</li>
+  </ol>
+
+  <h2>🛠️ 5. Troubleshooting</h2>
+  <table>
+    <tr><th>Issue</th><th>Solution</th></tr>
+    <tr><td>Form data not received</td><td>Check domain/token match in settings</td></tr>
+    <tr><td>API silently fails</td><td>Verify <code>$_SERVER['SERVER_NAME']</code> and match allowed domain</td></tr>
+    <tr><td>CF7 fields missing</td><td>Ensure names like <code>your-name</code>, <code>your-phone</code> etc. are used</td></tr>
+    <tr><td>Elementor fields ignored</td><td>Field IDs must match exactly: <code>name</code>, <code>email</code>, etc.</td></tr>
+  </table>
+
+  <h2>🧰 6. Optional: Custom Forms</h2>
+  <p>You can call the send function manually from theme/plugin code:</p>
+  <pre>
+$data = [
+  'name' => 'John Doe',
+  'email' => 'john@example.com',
+  'mob' => '9876543210',
+  'subject' => 'Demo Subject',
+  'message' => 'This is a test message',
+  'website' => home_url()
+];
+ese_crm_send_to_api($data);
+  </pre>
+
+  <h2>📞 Support</h2>
+  <p>
+    <strong>Author:</strong> Sr. Vivek Raj<br>
+    <strong>Email:</strong> iwebbrella@gmail.com<br>
+    <strong>Website:</strong> <a href="https://webbrella.com" target="_blank">https://webbrella.com</a>
+  </p>
+
+</body>
+</html>
