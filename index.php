@@ -2,7 +2,7 @@
 /*
 Plugin Name: LeadRouter
 Plugin URI: https://vivzon.in//plugins/lead-router/index.html
-Description: Route leads from Contact Form 7, Elementor, and custom forms directly to your Vivzon Browser CRM system with ease.
+Description: Route leads from Contact Form 7, Elementor, and custom forms directly to your Vivzon Business CRM system with ease.
 Version: 1.0
 Author: Sr. Vivek Raj
 Author URI: https://vivzon.in
@@ -95,3 +95,4 @@ function vivzon_crm_elementor_submission($record, $handler) {
 
 // Optional: For custom or shortcode-based form submissions
 // Usage: Call vivzon_crm_send_to_api($data) where appropriate
+
