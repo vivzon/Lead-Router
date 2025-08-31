@@ -2,7 +2,7 @@
 /*
 Plugin Name: LeadRouter
 Plugin URI: https://vivzon.in//plugins/lead-router/index.html
-Description: Route leads from Contact Form 7, Elementor, and custom forms directly to your Vivzon Business CRM system with ease.
+Description: Route leads from Contact Form 7, Elementor, and custom forms directly to your Vivzon Browser CRM system with ease.
 Version: 1.0
 Author: Sr. Vivek Raj
 Author URI: https://vivzon.in
@@ -69,13 +69,37 @@ function vivzon_crm_c7_submission($contact_form) {
     $data = $submission->get_posted_data();
 
     vivzon_crm_send_to_api([
-        'name' => $data['your-name'] ?? '',
-        'email' => $data['your-email'] ?? '',
-        'mob' => $data['your-phone'] ?? '',
-        'subject' => $data['your-subject'] ?? '',
-        'message' => $data['your-message'] ?? '',
-        'website' => home_url()
-    ]);
+		'name'    => $data['your-name'] 
+						?? $data['name'] 
+						?? trim(($data['your-firstname'] ?? $data['firstname'] ?? $data['first_name'] ?? '') 
+							. ' ' . 
+							($data['your-lastname'] ?? $data['lastname'] ?? $data['last_name'] ?? '')),
+
+		'email'   => $data['your-email'] 
+						?? $data['email'] 
+						?? $data['user_email'] 
+						?? '',
+
+		'mob'     => $data['your-phone'] 
+						?? $data['phone'] 
+						?? $data['your-mob'] 
+						?? $data['your-mobile'] 
+						?? $data['mobile'] 
+						?? $data['contact'] 
+						?? '',
+
+		'subject' => $data['your-subject'] 
+						?? $data['subject'] 
+						?? '',
+
+		'message' => $data['your-message'] 
+						?? $data['message'] 
+						?? $data['comments'] 
+						?? $data['enquiry'] 
+						?? '',
+
+		'website' => home_url()
+	]);
 }
 
 // Elementor Pro Forms Integration
@@ -84,15 +108,55 @@ function vivzon_crm_elementor_submission($record, $handler) {
     $fields = $record->get('fields');
 
     vivzon_crm_send_to_api([
-        'name' => $fields['name']['value'] ?? '',
-        'email' => $fields['email']['value'] ?? '',
-        'mob' => $fields['phone']['value'] ?? '',
-        'subject' => $fields['subject']['value'] ?? '',
-        'message' => $fields['message']['value'] ?? '',
-        'website' => home_url()
-    ]);
+		// NAME: use 'name', or combine 'firstname' + 'lastname'
+		'name'    => isset($fields['name']['value']) && !empty(trim($fields['name']['value']))
+						? trim($fields['name']['value'])
+						: trim(
+							($fields['firstname']['value'] ?? $fields['first_name']['value'] ?? $fields['your-firstname']['value'] ?? '') 
+							. ' ' . 
+							($fields['lastname']['value'] ?? $fields['last_name']['value'] ?? $fields['your-lastname']['value'] ?? '')
+						),
+
+		// EMAIL: assume multiple variations
+		'email'   => strtolower(trim(
+						$fields['email']['value'] 
+						?? $fields['your-email']['value'] 
+						?? $fields['user_email']['value'] 
+						?? ''
+					)),
+
+		// PHONE: assume multiple variations and normalize
+		'mob'     => preg_replace('/\D+/', '', (
+						$fields['phone']['value'] 
+						?? $fields['your-phone']['value'] 
+						?? $fields['mobile']['value'] 
+						?? $fields['your-mobile']['value'] 
+						?? $fields['your-mob']['value'] 
+						?? $fields['contact']['value'] 
+						?? ''
+					)),
+
+		// SUBJECT: assume variations
+		'subject' => trim(
+						$fields['subject']['value'] 
+						?? $fields['your-subject']['value'] 
+						?? $fields['topic']['value'] 
+						?? ''
+					),
+
+		// MESSAGE: assume multiple message/enquiry fields, strip HTML
+		'message' => strip_tags(trim(
+						$fields['message']['value'] 
+						?? $fields['your-message']['value'] 
+						?? $fields['comments']['value'] 
+						?? $fields['enquiry']['value'] 
+						?? ''
+					)),
+
+		// WEBSITE: always your site
+		'website' => home_url()
+	]);
 }
 
 // Optional: For custom or shortcode-based form submissions
 // Usage: Call vivzon_crm_send_to_api($data) where appropriate
-
