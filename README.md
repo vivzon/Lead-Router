@@ -1,6 +1,6 @@
 # LeadRouter – WordPress Plugin
 
-**Version**: 1.1
+**Version**: 1.1   
 **Author**: Sr. Vivek Raj  
 **Plugin URI**: [https://vivzon.in/plugins/lead-router/index.html](https://vivzon.in/plugins/lead-router/index.html)  
 **License**: GPLv2 or later  
